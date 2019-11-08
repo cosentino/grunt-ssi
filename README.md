@@ -75,6 +75,62 @@ Default value: `'utf8'`
 
 File encoding used to read and write out the files.
 
+#### options.varDefaults
+Type: `Array` of `Objects`
+Default value `[]`
+
+Provide default values for variable substitutions. If a variable is set in both options.varDefaults AND in the #include directive, the variable from the #include wins. For example, if we have these files:
+
+```html
+<!-- head.html -->
+<head>
+  <link rel="stylesheet" href="${cssBundle}.css" type="text/css" />
+</head>
+```
+
+```html
+<!-- main.html -->
+<!-- #include file="includes/head.html" ${cssBundle}="bananas" -->
+<body>...</body>
+```
+
+And this Grunt configuration:
+
+```js:
+
+grunt.initConfig({
+  ssi: {
+    options: {
+      varDefaults: [
+        {
+          name: 'cssBundle',
+          value: 'static',
+        }
+      ],
+    },
+    target: {
+      files: [{
+        expand: true,
+        cwd: 'dist',
+        src: ['*.html'],
+        dest: 'dist'
+      }],
+    }
+  },
+});
+```
+
+We'll get this output:
+
+```html
+<!-- head.html -->
+<head>
+  <link rel="stylesheet" href="bananas.css" type="text/css" />
+</head>
+<!-- main.html -->
+<body>...</body>
+```
+
 ### Usage Examples
 
 #### Standard Options
@@ -117,6 +173,7 @@ grunt.initConfig({
   },
 });
 ```
+
 
 ## Contributing
 In lieu of a formal styleguide, take care to maintain the existing coding style. Add unit tests for any new or changed functionality. Lint and test your code using [Grunt](http://gruntjs.com/).
