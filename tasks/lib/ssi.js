@@ -21,8 +21,8 @@ module.exports = function (grunt) {
     var defaults = {
         cacheDir: '.tmp/html',
         fileSep: path.sep,
-        ssiRegex: /<!--\s*\#\s*include\s+(file|virtual)=["']([^"'<>|\b]+)['"]\s*-->/gi,
-        includeRegex: /<!--\s*\#\s*include\s+(file|virtual)=["']([^"'<>|\b]+)['"]\s*-->/,
+        ssiRegex: /<!--\s*\#\s*include\s+(file|virtual)=["']([^"'<>|\b]+)['"]\s*(?:\${([^"'<>|\b]*)}=["']([^"'<>|\b]*)["'])?\s*-->/gi,
+        includeRegex: /<!--\s*\#\s*include\s+(file|virtual)=["']([^"'<>|\b]+)['"]\s*(?:\${([^"'<>|\b]*)}=["']([^"'<>|\b]*)["'])?\s*-->/,
         cache: true,
         ext: '.html',
         baseDir: process.cwd(),
@@ -147,7 +147,13 @@ module.exports = function (grunt) {
                     var include = {
                         type: includeParts[1],
                         path: includeParts[2],
-                        original: includeParts[0]
+                        original: includeParts[0],
+                        vars: [
+                            {
+                                name: includeParts[3],
+                                value: includeParts[4]
+                            }
+                        ]
                     };
 
                     includes.push(include);
@@ -503,6 +509,13 @@ module.exports = function (grunt) {
 
                 //Recursively process the include file
                 var data = this.processFile(filePath, newDir, false);
+
+                //Replace variables values                
+                for (var j = 0; j < include.vars.length; j++) {
+                    var variable = include.vars[j];
+                    var re = new RegExp('\\${' + variable.name + '}', 'g'); 
+                    data = data.replace(re, variable.value);
+                }
 
                 //Insert the includes processed HTML into the parent HTML
                 html = html.replace(include.original, data);
