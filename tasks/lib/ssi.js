@@ -510,11 +510,35 @@ module.exports = function (grunt) {
                 //Recursively process the include file
                 var data = this.processFile(filePath, newDir, false);
 
-                //Replace variables values                
-                for (var j = 0; j < include.vars.length; j++) {
-                    var variable = include.vars[j];
-                    var re = new RegExp('\\${' + variable.name + '}', 'g'); 
-                    data = data.replace(re, variable.value);
+                // Search for variable inside the html
+                var re = /\${([^"'<>|\b}]+)}/g; 
+                var matches = data.match(re);
+                if (matches) {
+                    for (var j = 0; j < matches.length; j++) {
+                        var innerRE = /\${([^"'<>|\b}]+)}/g; 
+                        var variableMatch = innerRE.exec(matches[j]);
+                        if (variableMatch) {
+                            var variableName = variableMatch[1];
+                            var variableValue = '';
+
+                            // Check if a value was passed by the parent include,
+                            // otherwise use the default value.
+                            // As a fallback use an empty string
+                            var parentIncludeVarInfo = include.vars.find(function(item) { return item.name === variableName; });
+                            if (parentIncludeVarInfo) {
+                                variableValue = parentIncludeVarInfo.value;
+                            } else if (this.settings.varDefaults) {
+                                var defaultVarInfo = this.settings.varDefaults.find(function(item) { return item.name === variableName; });
+                                if (defaultVarInfo) {
+                                    variableValue = defaultVarInfo.value;
+                                }
+                            }
+                            
+                            //Replace variables values
+                            var variableRE = new RegExp('\\${' + variableName + '}', 'g'); 
+                            data = data.replace(variableRE, variableValue);
+                        }
+                    }
                 }
 
                 //Insert the includes processed HTML into the parent HTML

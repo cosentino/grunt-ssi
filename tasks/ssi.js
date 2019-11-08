@@ -26,6 +26,7 @@ module.exports = function (grunt) {
             ext: '.html',
             encoding: 'utf8',
             baseDir: 'html',
+            varDefaults: []
         };
 
         var options = this.options(defaults);
