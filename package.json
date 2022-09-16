@@ -1,6 +1,6 @@
 {
   "name": "@cosentino/grunt-ssi",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "Compiles HTML with SSI into static HTML pages",
   "homepage": "https://github.com/cosentino/grunt-ssi#readme",
   "author": {
