@@ -1,8 +1,8 @@
 {
-  "name": "grunt-ssi",
-  "description": "Compiles HTML with SSI into static HTML pages",
+  "name": "@cosentino/grunt-ssi",
   "version": "0.2.1",
-  "homepage": "https://github.com/anguspiv/grunt-ssi",
+  "description": "Compiles HTML with SSI into static HTML pages",
+  "homepage": "https://github.com/cosentino/grunt-ssi#readme",
   "author": {
     "name": "Angus Perkerson",
     "email": "angusp@angup.com",
@@ -10,10 +10,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/anguspiv/grunt-ssi.git"
+    "url": "git+https://github.com/cosentino/grunt-ssi.git"
   },
   "bugs": {
-    "url": "https://github.com/anguspiv/grunt-ssi/issues"
+    "url": "https://github.com/cosentino/grunt-ssi/issues"
   },
   "licenses": [
     {
@@ -35,11 +35,13 @@
   },
   "peerDependencies": {
     "grunt": "~0.4.2"
-  },
-  "keywords": [
-    "gruntplugin"
-  ],
+  },  
   "dependencies": {
     "node.extend": "~1.0.9"
-  }
+  },
+  "keywords": [
+    "gruntplugin",
+    "ssi",
+    "include"
+  ]
 }
